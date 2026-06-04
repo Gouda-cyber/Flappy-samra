@@ -8,7 +8,7 @@ const bgImg = new Image();
 bgImg.src = "masrawy.png";
 
 const pipeImg = new Image();
-pipeImg.src = "pipe.png";
+pipeImg.src = "tea.png";
 
 let bird = {
     x: 80,

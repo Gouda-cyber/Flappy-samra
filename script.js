@@ -14,7 +14,7 @@ let bird = {
     x: 80,
     y: 250,
     width: 50,
-    height: 40,
+    height: 50,
     velocity: 0
 };
 
@@ -22,10 +22,18 @@ let gravity = 0.5;
 let jump = -8;
 
 let pipes = [];
-
 let score = 0;
 
-function createPipe(){
+function resetGame() {
+    bird.x = 80;
+    bird.y = 250;
+    bird.velocity = 0;
+
+    pipes = [];
+    score = 0;
+}
+
+function createPipe() {
     let gap = 170;
 
     let topHeight =
@@ -35,34 +43,40 @@ function createPipe(){
         x: canvas.width,
         topHeight: topHeight,
         gap: gap,
-        counted:false
+        counted: false
     });
 }
 
 setInterval(createPipe, 2000);
 
-document.addEventListener("keydown", ()=>{
+document.addEventListener("click", () => {
     bird.velocity = jump;
 });
 
-document.addEventListener("click", ()=>{
-    bird.velocity = jump;
+document.addEventListener("keydown", (e) => {
+    if (e.code === "Space") {
+        bird.velocity = jump;
+    }
 });
 
-function update(){
+function update() {
 
     bird.velocity += gravity;
     bird.y += bird.velocity;
 
-    if(bird.y < 0){
-        bird.y = 0;
+    if (
+        bird.y < 0 ||
+        bird.y + bird.height > canvas.height
+    ) {
+        resetGame();
+        return;
     }
 
-    for(let i=0;i<pipes.length;i++){
+    for (let i = 0; i < pipes.length; i++) {
 
         pipes[i].x -= 3;
 
-        if(
+        if (
             bird.x + bird.width > pipes[i].x &&
             bird.x < pipes[i].x + 70 &&
             (
@@ -70,30 +84,33 @@ function update(){
                 bird.y + bird.height >
                 pipes[i].topHeight + pipes[i].gap
             )
-        ){
-            location.reload();
+        ) {
+            resetGame();
+            return;
         }
 
-        if(
+        if (
             !pipes[i].counted &&
             pipes[i].x + 70 < bird.x
-        ){
+        ) {
             score++;
             pipes[i].counted = true;
         }
     }
 
-    if(
-        bird.y + bird.height >
-        canvas.height
-    ){
-        location.reload();
-    }
-
-    pipes = pipes.filter(pipe => pipe.x > -100);
+    pipes = pipes.filter(
+        pipe => pipe.x > -100
+    );
 }
 
-function draw(){
+function draw() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
     ctx.drawImage(
         bgImg,
@@ -103,15 +120,7 @@ function draw(){
         canvas.height
     );
 
-    ctx.drawImage(
-        birdImg,
-        bird.x,
-        bird.y,
-        bird.width,
-        bird.height
-    );
-
-    pipes.forEach(pipe=>{
+    pipes.forEach(pipe => {
 
         ctx.drawImage(
             pipeImg,
@@ -128,16 +137,14 @@ function draw(){
             pipe.topHeight + pipe.gap
         );
 
-        ctx.scale(1,-1);
+        ctx.scale(1, -1);
 
         ctx.drawImage(
             pipeImg,
             -70,
-            -(
-                canvas.height -
-                pipe.topHeight -
-                pipe.gap
-            ),
+            -(canvas.height -
+            pipe.topHeight -
+            pipe.gap),
             70,
             canvas.height -
             pipe.topHeight -
@@ -146,6 +153,14 @@ function draw(){
 
         ctx.restore();
     });
+
+    ctx.drawImage(
+        birdImg,
+        bird.x,
+        bird.y,
+        bird.width,
+        bird.height
+    );
 
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
@@ -156,12 +171,9 @@ function draw(){
     );
 }
 
-function gameLoop(){
-
+function gameLoop() {
     update();
-
     draw();
-
     requestAnimationFrame(gameLoop);
 }
 

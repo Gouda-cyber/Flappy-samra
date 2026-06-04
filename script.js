@@ -1,6 +1,8 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+const startBtn = document.getElementById("startBtn");
+
 const birdImg = new Image();
 birdImg.src = "samra.png";
 
@@ -10,16 +12,18 @@ bgImg.src = "masrawy.png";
 const pipeImg = new Image();
 pipeImg.src = "tea.png";
 
+let gameStarted = false;
+
 let bird = {
     x: 80,
     y: 250,
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     velocity: 0
 };
 
-let gravity = 0.5;
-let jump = -8;
+let gravity = 0.35;
+let jump = -7;
 
 let pipes = [];
 let score = 0;
@@ -31,13 +35,25 @@ function resetGame() {
 
     pipes = [];
     score = 0;
+
+    gameStarted = false;
+    startBtn.style.display = "block";
 }
 
+startBtn.addEventListener("click", () => {
+    resetGame();
+    gameStarted = true;
+    startBtn.style.display = "none";
+});
+
 function createPipe() {
-    let gap = 170;
+
+    if (!gameStarted) return;
+
+    let gap = 220;
 
     let topHeight =
-        Math.random() * 250 + 50;
+        Math.random() * 200 + 50;
 
     pipes.push({
         x: canvas.width,
@@ -47,19 +63,23 @@ function createPipe() {
     });
 }
 
-setInterval(createPipe, 2000);
+setInterval(createPipe, 2500);
 
 document.addEventListener("click", () => {
-    bird.velocity = jump;
+    if(gameStarted){
+        bird.velocity = jump;
+    }
 });
 
 document.addEventListener("keydown", (e) => {
-    if (e.code === "Space") {
+    if(e.code === "Space" && gameStarted){
         bird.velocity = jump;
     }
 });
 
 function update() {
+
+    if (!gameStarted) return;
 
     bird.velocity += gravity;
     bird.y += bird.velocity;
@@ -72,11 +92,11 @@ function update() {
         return;
     }
 
-    for (let i = 0; i < pipes.length; i++) {
+    for(let i=0;i<pipes.length;i++){
 
-        pipes[i].x -= 3;
+        pipes[i].x -= 2;
 
-        if (
+        if(
             bird.x + bird.width > pipes[i].x &&
             bird.x < pipes[i].x + 70 &&
             (
@@ -84,15 +104,15 @@ function update() {
                 bird.y + bird.height >
                 pipes[i].topHeight + pipes[i].gap
             )
-        ) {
+        ){
             resetGame();
             return;
         }
 
-        if (
+        if(
             !pipes[i].counted &&
             pipes[i].x + 70 < bird.x
-        ) {
+        ){
             score++;
             pipes[i].counted = true;
         }
@@ -105,12 +125,7 @@ function update() {
 
 function draw() {
 
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
     ctx.drawImage(
         bgImg,
@@ -137,7 +152,7 @@ function draw() {
             pipe.topHeight + pipe.gap
         );
 
-        ctx.scale(1, -1);
+        ctx.scale(1,-1);
 
         ctx.drawImage(
             pipeImg,
@@ -172,8 +187,10 @@ function draw() {
 }
 
 function gameLoop() {
+
     update();
     draw();
+
     requestAnimationFrame(gameLoop);
 }
 

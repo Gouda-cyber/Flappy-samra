@@ -5,10 +5,10 @@ const birdImg = new Image();
 birdImg.src = "samra.png";
 
 const bgImg = new Image();
-bgImg.src = "images/bg.png";
+bgImg.src = "masrawy.png";
 
 const pipeImg = new Image();
-pipeImg.src = "images/pipe.png";
+pipeImg.src = "pipe.png";
 
 let bird = {
     x: 80,

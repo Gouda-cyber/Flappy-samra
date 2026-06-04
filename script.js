@@ -50,9 +50,10 @@ function createPipe() {
 
     if (!gameStarted) return;
 
-    let gap = 280;
+    let gap = 220;
 
-    let topHeight = Math.random() * 180 + 50;
+    let topHeight =
+        Math.random() * 200 + 50;
 
     pipes.push({
         x: canvas.width,
@@ -65,13 +66,13 @@ function createPipe() {
 setInterval(createPipe, 2500);
 
 document.addEventListener("click", () => {
-    if (gameStarted) {
+    if(gameStarted){
         bird.velocity = jump;
     }
 });
 
 document.addEventListener("keydown", (e) => {
-    if (e.code === "Space" && gameStarted) {
+    if(e.code === "Space" && gameStarted){
         bird.velocity = jump;
     }
 });
@@ -91,38 +92,40 @@ function update() {
         return;
     }
 
-    for (let i = 0; i < pipes.length; i++) {
+    for(let i=0;i<pipes.length;i++){
 
-        pipes[i].x -= 1.5;
+        pipes[i].x -= 2;
 
-        if (
+        if(
             bird.x + bird.width > pipes[i].x &&
-            bird.x < pipes[i].x + 120 &&
+            bird.x < pipes[i].x + 70 &&
             (
                 bird.y < pipes[i].topHeight ||
                 bird.y + bird.height >
                 pipes[i].topHeight + pipes[i].gap
             )
-        ) {
+        ){
             resetGame();
             return;
         }
 
-        if (
+        if(
             !pipes[i].counted &&
-            pipes[i].x + 120 < bird.x
-        ) {
+            pipes[i].x + 70 < bird.x
+        ){
             score++;
             pipes[i].counted = true;
         }
     }
 
-    pipes = pipes.filter(pipe => pipe.x > -150);
+    pipes = pipes.filter(
+        pipe => pipe.x > -100
+    );
 }
 
 function draw() {
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
     ctx.drawImage(
         bgImg,
@@ -138,25 +141,29 @@ function draw() {
             pipeImg,
             pipe.x,
             0,
-            120,
+            70,
             pipe.topHeight
         );
 
         ctx.save();
 
         ctx.translate(
-            pipe.x + 120,
+            pipe.x + 70,
             pipe.topHeight + pipe.gap
         );
 
-        ctx.scale(1, -1);
+        ctx.scale(1,-1);
 
         ctx.drawImage(
             pipeImg,
-            -120,
-            -(canvas.height - pipe.topHeight - pipe.gap),
-            120,
-            canvas.height - pipe.topHeight - pipe.gap
+            -70,
+            -(canvas.height -
+            pipe.topHeight -
+            pipe.gap),
+            70,
+            canvas.height -
+            pipe.topHeight -
+            pipe.gap
         );
 
         ctx.restore();
@@ -172,12 +179,18 @@ function draw() {
 
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
-    ctx.fillText("Score: " + score, 10, 40);
+    ctx.fillText(
+        "Score: " + score,
+        10,
+        40
+    );
 }
 
 function gameLoop() {
+
     update();
     draw();
+
     requestAnimationFrame(gameLoop);
 }
 

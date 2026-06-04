@@ -50,10 +50,10 @@ function createPipe() {
 
     if (!gameStarted) return;
 
-    let gap = 220;
+    let gap = 280; 
 
     let topHeight =
-        Math.random() * 200 + 50;
+        Math.random() * 180 + 50;
 
     pipes.push({
         x: canvas.width,
@@ -97,26 +97,25 @@ function update() {
         pipes[i].x -= 2;
 
         if(
-            bird.x + bird.width > pipes[i].x &&
-            bird.x < pipes[i].x + 70 &&
-            (
-                bird.y < pipes[i].topHeight ||
-                bird.y + bird.height >
-                pipes[i].topHeight + pipes[i].gap
-            )
-        ){
-            resetGame();
-            return;
-        }
+    bird.x + bird.width > pipes[i].x &&
+    bird.x < pipes[i].x + 120 &&
+    (
+        bird.y < pipes[i].topHeight ||
+        bird.y + bird.height >
+        pipes[i].topHeight + pipes[i].gap
+    )
+){
+    resetGame();
+    return;
+}
 
         if(
-            !pipes[i].counted &&
-            pipes[i].x + 70 < bird.x
-        ){
-            score++;
-            pipes[i].counted = true;
-        }
-    }
+    !pipes[i].counted &&
+    pipes[i].x + 120 < bird.x
+){
+    score++;
+    pipes[i].counted = true;
+}
 
     pipes = pipes.filter(
         pipe => pipe.x > -100
@@ -137,20 +136,20 @@ function draw() {
 
     pipes.forEach(pipe => {
 
-        ctx.drawImage(
-            pipeImg,
-            pipe.x,
-            0,
-            70,
-            pipe.topHeight
-        );
+       ctx.drawImage(
+    pipeImg,
+    pipe.x,
+    0,
+    120,
+    pipe.topHeight
+);
 
         ctx.save();
 
         ctx.translate(
-            pipe.x + 70,
-            pipe.topHeight + pipe.gap
-        );
+    pipe.x + 120,
+    pipe.topHeight + pipe.gap
+);
 
         ctx.scale(1,-1);
 

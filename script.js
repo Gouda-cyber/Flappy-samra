@@ -10,7 +10,7 @@ const bgImg = new Image();
 bgImg.src = "masrawy.png";
 
 const pipeImg = new Image();
-pipeImg.src = "nerom.png";
+pipeImg.src = "Rawan.png";
 
 let gameStarted = false;
 

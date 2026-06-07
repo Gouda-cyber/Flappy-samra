@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 const startBtn = document.getElementById("startBtn");
 
 const birdImg = new Image();
-birdImg.src = "samra.png";
+birdImg.src = "Goda.png";
 
 const bgImg = new Image();
 bgImg.src = "masrawy.png";
